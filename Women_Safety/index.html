@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SafeRoute | Smart Safety Route Planner</title>
+
+    <meta
+        name="description"
+        content="SafeRoute India compares practical routes using live route data, current time, mapped safety infrastructure and government crime-data sources."
+    >
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
+<div class="background-effects">
+
+    <div class="warm-orb orb-1"></div>
+    <div class="warm-orb orb-2"></div>
+    <div class="warm-orb orb-3"></div>
+
+    <div class="soft-grid"></div>
+
+</div>
+
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            🔰
+        </div>
+
+        <div>
+
+            <div class="brand-name">
+                SafeRoute
+            </div>
+
+            
+
+        </div>
+
+    </div>
+
+
+    <div class="nav-right">
+
+        <div class="time-pill">
+
+            <span class="time-dot"></span>
+
+            <span id="liveTime">
+                --:--:--
+            </span>
+
+            <span>
+                IST
+            </span>
+
+        </div>
+
+
+        <div class="privacy-pill">
+            Privacy Mode:No location history
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+    <div class="hero-badge">
+
+        <span class="hero-live-dot"></span>
+
+        SAFE ROUTE SUGGESTIONS
+
+    </div>
+
+
+    <h1>
+
+        Find your route.
+
+        <span>
+            Understand its safety.
+        </span>
+
+    </h1>
+
+
+    <p>
+
+        Compare genuine route alternatives using current time,
+        mapped lighting, public activity, emergency services,
+        road environment, nightlife context and available
+        government crime information.
+
+    </p>
+
+
+    <div class="time-context-card">
+
+        <div
+            class="time-context-icon"
+            id="timeContextIcon"
+        >
+            ☀️
+        </div>
+
+
+        <div class="time-context-content">
+
+            <strong id="timeContextTitle">
+                Daytime safety analysis
+            </strong>
+
+            <span id="timeContextDescription">
+                Current time is considered in the safety model.
+            </span>
+
+        </div>
+
+
+        <div
+            class="time-context-badge"
+            id="timeContextBadge"
+        >
+            DAY
+        </div>
+
+    </div>
+
+
+    <div class="hero-stats">
+
+        <div class="hero-stat">
+
+            <strong>
+                3+
+            </strong>
+
+            <span>
+                Genuine alternatives
+            </span>
+
+        </div>
+
+
+        <div class="hero-stat">
+
+            <strong>
+                8
+            </strong>
+
+            <span>
+                Safety dimensions
+            </span>
+
+        </div>
+
+
+        <div class="hero-stat">
+
+            <strong>
+                24/7
+            </strong>
+
+            <span>
+                Time-aware analysis
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<section class="search-wrapper">
+
+    <div class="search-card">
+
+        <div class="search-card-glow"></div>
+
+
+        <div class="search-header">
+
+            <div>
+
+                <span class="section-kicker">
+                    ROUTE ANALYSIS
+                </span>
+
+                <h2>
+                    Plan your journey
+                </h2>
+
+                <p>
+                    Compare available routes before you travel.
+                </p>
+
+            </div>
+
+
+            <div class="india-status">
+
+                <span></span>
+
+                India
+
+            </div>
+
+        </div>
+
+
+
+        <!-- START -->
+
+        <div class="input-row">
+
+            <div class="input-box">
+
+                <div class="input-icon start">
+                    🧭
+                </div>
+
+                <div class="input-content">
+
+                    <label>
+                        START LOCATION
+                    </label>
+
+                    <input
+                        id="startInput"
+                        type="text"
+                        placeholder="Enter starting location"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="locateBtn"
+                class="location-button"
+                type="button"
+            >
+
+                ◎
+                Use my location
+
+            </button>
+
+        </div>
+
+
+
+        <!-- DESTINATION -->
+
+        <div class="input-box destination-box">
+
+            <div class="input-icon destination">
+                🎯
+            </div>
+
+            <div class="input-content">
+
+                <label>
+                    DESTINATION
+                </label>
+
+                <input
+                    id="destinationInput"
+                    type="text"
+                    placeholder="Where are you going?"
+                    autocomplete="off"
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PREFERENCE -->
+
+        <div class="preference-section">
+
+            <div class="preference-heading">
+
+                <strong>
+                    Route preference
+                </strong>
+
+                <span>
+                    Choose what matters most
+                </span>
+
+            </div>
+
+
+            <div class="preference-grid">
+
+
+                <div class="preference-card">
+
+                    <input
+                        type="radio"
+                        id="prefSafest"
+                        name="preference"
+                        value="safest"
+                        checked
+                    >
+
+                    <label for="prefSafest">
+
+                        <div class="preference-icon">
+                            🛡️
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Safest
+                            </strong>
+
+                            <span>
+                                Safety first
+                            </span>
+
+                        </div>
+
+                    </label>
+
+                </div>
+
+
+
+                <div class="preference-card">
+
+                    <input
+                        type="radio"
+                        id="prefBalanced"
+                        name="preference"
+                        value="balanced"
+                    >
+
+                    <label for="prefBalanced">
+
+                        <div class="preference-icon">
+                            ⚖️
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Balanced
+                            </strong>
+
+                            <span>
+                                Safety + time
+                            </span>
+
+                        </div>
+
+                    </label>
+
+                </div>
+
+
+
+                <div class="preference-card">
+
+                    <input
+                        type="radio"
+                        id="prefFastest"
+                        name="preference"
+                        value="fastest"
+                    >
+
+                    <label for="prefFastest">
+
+                        <div class="preference-icon">
+                            ⚡
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Fastest
+                            </strong>
+
+                            <span>
+                                Time first
+                            </span>
+
+                        </div>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ANALYZE -->
+
+        <button
+            id="analyzeBtn"
+            class="analyze-button"
+            type="button"
+        >
+
+            <span>
+                ✦
+            </span>
+
+            Analyze Safer Routes
+
+            <b>
+                →
+            </b>
+
+        </button>
+
+
+        <div class="privacy-note">
+
+            🔐 Location is used for this analysis only.
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     RESULTS
+===================================================== -->
+
+<section
+    id="resultsSection"
+    class="results-section hidden"
+>
+
+
+    <div class="results-header">
+
+        <div>
+
+            <span class="section-kicker">
+                ROUTE INTELLIGENCE
+            </span>
+
+            <h2>
+                Your route options
+            </h2>
+
+            <p id="resultsSubtitle">
+                Scores are calculated using the analysis time.
+            </p>
+
+        </div>
+
+
+        <div class="routes-analyzed">
+
+            <strong id="routeCount">
+                0
+            </strong>
+
+            <span>
+                genuine routes
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- LIVE DATA BANNER -->
+
+    <div class="live-data-banner">
+
+        <div class="live-data-icon">
+            🔄
+        </div>
+
+        <div>
+
+            <strong>
+                Fresh analysis
+            </strong>
+
+            <span>
+                Route and mapped safety data were requested when
+                you pressed Analyze.
+            </span>
+
+        </div>
+
+        <div class="live-badge">
+            LIVE QUERY
+        </div>
+
+    </div>
+
+
+
+    <!-- TIME BANNER -->
+
+    <div class="time-score-banner">
+
+        <div
+            class="time-score-icon"
+            id="resultsTimeIcon"
+        >
+            ☀️
+        </div>
+
+        <div>
+
+            <strong id="resultsTimeTitle">
+                Time-aware safety analysis
+            </strong>
+
+            <span id="resultsTimeText">
+                Current time affects the score weights.
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- RANKING -->
+
+    <div class="ranking-banner">
+
+        <div class="ranking-trophy">
+            🏆
+        </div>
+
+        <div>
+
+            <strong>
+                Safety ranking
+            </strong>
+
+            <span>
+                🥇 🥈 🥉 Routes are ranked from the genuine
+                alternatives returned by the routing service.
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ROUTES -->
+
+    <div
+        id="routeResults"
+        class="route-results"
+    ></div>
+
+
+
+    <!-- =================================================
+         MAP
+    ================================================= -->
+
+    <section class="map-section">
+
+        <div class="map-header">
+
+            <div>
+
+                <span class="section-kicker">
+                    ROUTE MAP
+                </span>
+
+                <h2>
+                    Safety around your route
+                </h2>
+
+            </div>
+
+
+            <div
+                id="mapStatus"
+                class="map-status"
+            >
+                Waiting...
+            </div>
+
+        </div>
+
+
+        <div class="map-shell">
+
+            <div
+                id="map"
+                class="map"
+            ></div>
+
+
+            <div class="map-legend">
+
+                <strong>
+                    Safety layers
+                </strong>
+
+
+                <div>
+                    <i class="route-line selected-line"></i>
+                    Selected route
+                </div>
+
+
+                <div>
+                    <i class="route-line alternate-line"></i>
+                    Alternative
+                </div>
+
+
+                <div>
+                    <i class="legend-dot light-dot"></i>
+                    Lighting
+                </div>
+
+
+                <div>
+                    <i class="legend-dot service-dot"></i>
+                    Services
+                </div>
+
+
+                <div>
+                    <i class="legend-dot activity-dot"></i>
+                    Activity
+                </div>
+
+
+                <div>
+                    <i class="legend-dot nightlife-dot"></i>
+                    Nightlife
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SCORE
+    ================================================= -->
+
+    <section class="score-dashboard">
+
+
+        <div class="dashboard-header">
+
+            <div>
+
+                <span class="section-kicker">
+                    SAFETY INTELLIGENCE
+                </span>
+
+                <h2>
+                    Route safety profile
+                </h2>
+
+                <p id="dashboardTimeText">
+                    Score calculated for current time.
+                </p>
+
+            </div>
+
+
+            <div class="main-score-area">
+
+                <div
+                    id="mainScoreRing"
+                    class="main-score-ring"
+                >
+
+                    <div>
+
+                        <strong id="mainScore">
+                            --
+                        </strong>
+
+                        <span>
+                            /100
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <small id="mainScoreLabel">
+                    Safety indicator
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <div
+            id="safetyBreakdown"
+            class="safety-grid"
+        ></div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         CRIME DATA
+    ================================================= -->
+
+    <section class="crime-section">
+
+        <div class="crime-header">
+
+            <div class="crime-icon">
+                🛡️
+            </div>
+
+            <div>
+
+                <span class="section-kicker">
+                    GOVERNMENT DATA
+                </span>
+
+                <h2>
+                    Crime intelligence
+                </h2>
+
+                <p>
+                    Official crime sources are shown separately
+                    from live map data.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="crime-notice">
+
+            <strong>
+                ⚠️ Important distinction
+            </strong>
+
+            <span>
+                Government NCRB datasets are historical/annual
+                statistics, not a live street-by-street crime feed.
+                They are therefore not presented as real-time incidents.
+            </span>
+
+        </div>
+
+
+        <div
+            id="crimeDataCard"
+            class="crime-data-card"
+        ></div>
+
+
+        <div class="official-sources">
+
+            <h3>
+                Official sources
+            </h3>
+
+
+            <a
+                href="https://data.gov.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                🇮🇳 Government Open Data Platform
+                <span>↗</span>
+            </a>
+
+
+            <a
+                href="https://data.gov.in/catalog/crime-against-women"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                🛡️ NCRB Crime Against Women Dataset
+                <span>↗</span>
+            </a>
+
+
+            <a
+                href="https://cybercrime.gov.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                💻 National Cyber Crime Reporting Portal
+                <span>↗</span>
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         TRANSPARENCY
+    ================================================= -->
+
+    <section class="transparency-card">
+
+        <div class="transparency-header">
+
+            <div class="transparency-icon">
+                🔎
+            </div>
+
+            <div>
+
+                <h3>
+                    Data transparency
+                </h3>
+
+                <p>
+                    SafeRoute distinguishes live queries,
+                    mapped information and historical government data.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="dataStatus"
+            class="data-grid"
+        ></div>
+
+    </section>
+
+</section>
+
+
+
+<!-- =====================================================
+     SOS
+===================================================== -->
+
+<section class="sos-section">
+
+    <div class="sos-card">
+
+        <div class="sos-icon">
+            🚨
+        </div>
+
+
+        <div class="sos-content">
+
+            <span>
+                EMERGENCY SUPPORT
+            </span>
+
+            <h2>
+                Need help right now?
+            </h2>
+
+            <p>
+                Access emergency options and share your location.
+            </p>
+
+        </div>
+
+
+        <button
+            id="sosBtn"
+            class="sos-button"
+            type="button"
+        >
+
+            SOS
+
+            <b>
+                →
+            </b>
+
+        </button>
+
+    </div>
+
+</section>
+
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <strong>
+        🛡️ SafeRoute India
+    </strong>
+
+    <p>
+        Live route analysis · Time-aware safety · Government data transparency
+    </p>
+
+    <small>
+        Safety scores are indicators based on available mapped and
+        historical information. They are not guarantees of real-world safety.
+    </small>
+
+</footer>
+
+
+
+<!-- =====================================================
+     LOADING
+===================================================== -->
+
+<div
+    id="loadingOverlay"
+    class="loading-overlay hidden"
+>
+
+    <div class="loading-card">
+
+        <div class="loading-animation">
+
+            <div class="loading-ring"></div>
+
+            <div class="loading-icon">
+                🛡️
+            </div>
+
+        </div>
+
+
+        <h3 id="loadingText">
+            Analyzing routes...
+        </h3>
+
+
+        <p>
+            Querying fresh route and mapped safety information.
+        </p>
+
+
+        <div class="loading-bar">
+            <span></span>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     SOS MODAL
+===================================================== -->
+
+<div
+    id="sosModal"
+    class="modal hidden"
+>
+
+    <div class="modal-card">
+
+        <button
+            id="closeModal"
+            class="modal-close"
+            type="button"
+        >
+            ×
+        </button>
+
+
+        <div class="modal-sos-icon">
+            🚨
+        </div>
+
+
+        <span class="modal-kicker">
+            EMERGENCY ASSISTANCE
+        </span>
+
+
+        <h2>
+            Emergency options
+        </h2>
+
+
+        <p>
+            Choose an action below. SafeRoute does not silently
+            contact emergency services.
+        </p>
+
+
+        <a
+            href="tel:112"
+            class="emergency-action call-action"
+        >
+
+            <div class="emergency-action-icon">
+                📞
+            </div>
+
+            <div>
+
+                <strong>
+                    Call 112
+                </strong>
+
+                <span>
+                    India's integrated emergency number
+                </span>
+
+            </div>
+
+            <b>
+                →
+            </b>
+
+        </a>
+
+
+        <button
+            id="shareLocationBtn"
+            class="emergency-action share-action"
+            type="button"
+        >
+
+            <div class="emergency-action-icon">
+                📍
+            </div>
+
+            <div>
+
+                <strong>
+                    Share my location
+                </strong>
+
+                <span>
+                    Share your current map location
+                </span>
+
+            </div>
+
+            <b>
+                →
+            </b>
+
+        </button>
+
+
+        <div
+            id="shareStatus"
+            class="share-status"
+        ></div>
+
+
+        <div class="emergency-warning">
+
+            ⚠️ If you are in immediate danger, contact emergency
+            services directly.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
